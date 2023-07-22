@@ -1,0 +1,2 @@
+-- CREATE TYPE
+CREATE DATABASE data_postgres;

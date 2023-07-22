@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:15.3-alpine3.18
+    restart: always
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=data_postgres
+      - PGDATA=/tmp
+    expose:
+      - 5432
+    # ports:
+    #   - 5432:5432
+    networks:
+      - full-stack
+    volumes: 
+      - db:/var/lib/postgresql/data/
+      - ./backend/data/config.sql:/docker-entrypoint-initdb.d/config.sql
+ 
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - full-stack
+
+
+volumes:
+  db:
+
+networks:
+  full-stack:
+    driver: bridge
+  
